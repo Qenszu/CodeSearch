@@ -1,12 +1,12 @@
 from sentence_transformers import SentenceTransformer, util
 import torch
 
-#Flax demo
+#Jina demo - Jina wins on our test
 
-model = SentenceTransformer('flax-sentence-embeddings/st-codesearch-distilroberta-base')
+model = SentenceTransformer("jinaai/jina-embeddings-v2-base-code", trust_remote_code=True)
 
 code_snippets = [
-"def save_user_profile(user_id, data): return db.users.update(user_id, data)",
+    "def save_user_profile(user_id, data): return db.users.update(user_id, data)",
     "def validate_token(token): return jwt.decode(token, SECRET_KEY, algorithms=['HS256'])",
     "def sunny(city): return requests.get(f'https://api.weather.com/{city1}')",
     "def rainy(city): return requests.get(f'https://api.weather.com/{city2}')",
