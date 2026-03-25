@@ -27,7 +27,7 @@ def intelligent_search(query):
     cosine_scores = util.cos_sim(query_embedding, code_embeddings)[0]
     best_match_idx = torch.argmax(cosine_scores).item()
 
-    return code_snippets[best_match_idx], cosine_scores[best_match_idx].item()
+    return my_code[best_match_idx], cosine_scores[best_match_idx].item()
 
 questions = [
     "Validate user",

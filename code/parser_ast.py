@@ -16,7 +16,3 @@ def parser(sciezka_do_pliku):
 
     return wyniki
 
-# PRZYKŁAD UŻYCIA:
-bloki = parser("ast_tests.py")
-print(f"Znaleziono {len(bloki)} elementów.")
-print(bloki)
