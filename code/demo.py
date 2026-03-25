@@ -1,5 +1,6 @@
 from sentence_transformers import SentenceTransformer, util
 import torch
+from parser_ast import parser
 
 #Flax demo
 
@@ -16,7 +17,9 @@ code_snippets = [
     "def buble_sort(a): for i in range(len(a)): for j in range(len(a)-i-1): if a[j] > a[j+1]: a[j], a[j+1] = a[j+1], a[j]"
 ]
 
-code_embeddings = model.encode(code_snippets, convert_to_tensor=True)
+my_code = parser("ast_tests.py")
+
+code_embeddings = model.encode(my_code, convert_to_tensor=True)
 
 
 def intelligent_search(query):
@@ -38,8 +41,12 @@ questions = [
     "2 fors loops"
 ]
 
+my_questions = [
+    "find add fun", 
+    "hello"] 
+
 print("==========================\n")
-for q in questions:
+for q in my_questions:
     result, score = intelligent_search(q)
     print(f"Pytanie: '{q}'")
     print(f"Znaleziony kod: {result}")
