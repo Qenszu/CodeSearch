@@ -1,13 +1,12 @@
 from sentence_transformers import SentenceTransformer, util
 import torch
-from parser_ast import parser
 
-#Flax demo
+#Jina demo - Jina wins on our test
 
-model = SentenceTransformer('flax-sentence-embeddings/st-codesearch-distilroberta-base')
+model = SentenceTransformer("jinaai/jina-embeddings-v2-base-code", trust_remote_code=True)
 
 code_snippets = [
-"def save_user_profile(user_id, data): return db.users.update(user_id, data)",
+    "def save_user_profile(user_id, data): return db.users.update(user_id, data)",
     "def validate_token(token): return jwt.decode(token, SECRET_KEY, algorithms=['HS256'])",
     "def sunny(city): return requests.get(f'https://api.weather.com/{city1}')",
     "def rainy(city): return requests.get(f'https://api.weather.com/{city2}')",
@@ -17,9 +16,7 @@ code_snippets = [
     "def buble_sort(a): for i in range(len(a)): for j in range(len(a)-i-1): if a[j] > a[j+1]: a[j], a[j+1] = a[j+1], a[j]"
 ]
 
-my_code = parser("ast_tests.py")
-
-code_embeddings = model.encode(my_code, convert_to_tensor=True)
+code_embeddings = model.encode(code_snippets, convert_to_tensor=True)
 
 
 def intelligent_search(query):
@@ -27,7 +24,7 @@ def intelligent_search(query):
     cosine_scores = util.cos_sim(query_embedding, code_embeddings)[0]
     best_match_idx = torch.argmax(cosine_scores).item()
 
-    return my_code[best_match_idx], cosine_scores[best_match_idx].item()
+    return code_snippets[best_match_idx], cosine_scores[best_match_idx].item()
 
 questions = [
     "Validate user",
@@ -41,12 +38,8 @@ questions = [
     "2 fors loops"
 ]
 
-my_questions = [
-    "find add fun", 
-    "hello"] 
-
 print("==========================\n")
-for q in my_questions:
+for q in questions:
     result, score = intelligent_search(q)
     print(f"Pytanie: '{q}'")
     print(f"Znaleziony kod: {result}")
