@@ -1,7 +1,7 @@
 import ast
 from pathlib import Path
 
-PATH = Path("")
+PATH = Path("code/")
 
 def parser(sciezka_do_pliku):
     with open(sciezka_do_pliku, "r", encoding="utf-8") as f:
@@ -19,14 +19,19 @@ def parser(sciezka_do_pliku):
 
     return wyniki   
 
-def search(PATH):
+def search(PATH, flatten=True):
     result = []
 
     for element in PATH.iterdir():
         file = str(element)
         if file[-2:] == "py":
-            result.append(parser(file))
+            tmp = parser(file)
+            if tmp:
+                result.append(parser(file))
 
+    if flatten:
+        return [i for sublist in result for i in sublist]
+
+    return result
     
 
-search(PATH)
