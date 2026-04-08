@@ -20,6 +20,7 @@ def parser(sciezka_do_pliku):
     return wyniki   
 
 def search(PATH=PATH, flatten=True):
+    PATH = Path(PATH)
     result = []
 
     for element in PATH.iterdir():
@@ -34,4 +35,3 @@ def search(PATH=PATH, flatten=True):
 
     return result
     
-
