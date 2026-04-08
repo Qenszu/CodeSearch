@@ -1,4 +1,7 @@
 import ast
+from pathlib import Path
+
+PATH = Path("")
 
 def parser(sciezka_do_pliku):
     with open(sciezka_do_pliku, "r", encoding="utf-8") as f:
@@ -14,5 +17,16 @@ def parser(sciezka_do_pliku):
             if fragment:
                 wyniki.append(fragment)
 
-    return wyniki
+    return wyniki   
 
+def search(PATH):
+    result = []
+
+    for element in PATH.iterdir():
+        file = str(element)
+        if file[-2:] == "py":
+            result.append(parser(file))
+
+    
+
+search(PATH)
