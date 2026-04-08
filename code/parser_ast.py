@@ -20,8 +20,13 @@ def parser(sciezka_do_pliku):
     return wyniki   
 
 def search(PATH=PATH, flatten=True):
+    if PATH[-2:] == "py":
+        return parser(PATH)
+    
     PATH = Path(PATH)
     result = []
+
+
 
     for element in PATH.iterdir():
         file = str(element)
