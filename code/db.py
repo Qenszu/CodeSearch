@@ -1,27 +1,13 @@
 import chromadb
-from sentence_transformers import SentenceTransformer
+from model import MyEmbeddingFunc
 
-model = SentenceTransformer("jinaai/jina-embeddings-v2-base-code", trust_remote_code=True)
-
-from chromadb import EmbeddingFunction, Documents, Embeddings
-
-class MyEmbeddingFunc(EmbeddingFunction):
-    def __call__(self, input: Documents) -> Embeddings:
-        # Metoda __call__ jest używana przy dodawaniu dokumentów
-        return model.encode(input).tolist()
-
-    def embed_documents(self, input: Documents) -> Embeddings:
-        # ChromaDB czasem wywołuje to jawnie dla dokumentów
-        return self.__call__(input)
-
-    def embed_query(self, input: Documents) -> Embeddings:
-        # TO TEGO BRAKOWAŁO: metoda używana przy collection.query
-        return self.__call__(input)
+F = MyEmbeddingFunc()
 
 chroma_client = chromadb.Client()
+
 collection = chroma_client.create_collection(
     name="code",
-    embedding_function=MyEmbeddingFunc()
+    embedding_function=F
 )
 
 collection.add(
