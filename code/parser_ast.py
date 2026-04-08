@@ -19,7 +19,7 @@ def parser(sciezka_do_pliku):
 
     return wyniki   
 
-def search(PATH, flatten=True):
+def search(PATH=PATH, flatten=True):
     result = []
 
     for element in PATH.iterdir():
