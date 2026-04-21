@@ -19,7 +19,7 @@ code_snippets = [
 
 my_code = parser("ast_tests.py")
 
-code_embeddings = model.encode(my_code, convert_to_tensor=True)
+code_embeddings = model.encode( my_code, convert_to_tensor=True)
 
 
 def intelligent_search(query):
