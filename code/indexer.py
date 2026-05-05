@@ -42,6 +42,9 @@ class CodeIndexer:
             print("FILE:", file)
             self.index_file(str(file))
 
+    def delete_file(self, path):
+        pass
+
 
 if __name__ == "__main__":
     indexer = CodeIndexer()
