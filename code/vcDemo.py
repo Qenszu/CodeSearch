@@ -6,7 +6,7 @@ from pathlib import Path
 from voiceRecognision import voice
 
 DB = DB("Test")
-arr = search("C:/Users/user/Documents/github/CodeSearch/code")
+arr = search("/Users/kajetanserwecinski/Documents/Programming/CodeSearchQuenszu/code")
 
 n = len(arr)
 

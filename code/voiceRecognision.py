@@ -1,5 +1,5 @@
 import speech_recognition as sr
-from voiceRecognitionFun import activeMicrophone
+#from voiceRecognitionFun import activeMicrophone
 from db import DB
 from pprint import pprint
 
@@ -8,6 +8,7 @@ def voice(DB):
 
     print("Initializing Speech Recognition...")
 
+    '''
     active_microphone_list = activeMicrophone.get_active_microphones()
     print(f"Choose your device input:")
     for i, src in enumerate(active_microphone_list):
@@ -17,7 +18,7 @@ def voice(DB):
 
     if ind < 0 or ind >= len(active_microphone_list):
         raise ValueError("Invalid input")
-
+    '''
     print("1. Polski\n2. English")
     lan = int(input("Select your language: "))
 
@@ -31,7 +32,7 @@ def voice(DB):
 
     while True:
         print("Speek now")
-        with sr.Microphone(device_index=ind) as source:
+        with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
 
