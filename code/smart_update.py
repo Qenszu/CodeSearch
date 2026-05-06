@@ -3,6 +3,9 @@ import os
 import pathspec
 from indexer import CodeIndexer
 
+def drumbson():
+    drumba = 0
+    print(drumba)
 
 def get_gitignore_spec():
     if os.path.exists('.gitignore'):
@@ -42,7 +45,8 @@ def smart_update(commit_a, commit_b):
                     indexer.index_file(path)
                 case 'M':
                     print(f"Aktualizuję w indeksie: {path}")
-                    indexer.delete_file(path)
+                    indexer.db.collection.delete(where={"path": path})
+
                     indexer.index_file(path)
                 case 'D':
                     print(f"Usuwam z indeksu: {path}")
