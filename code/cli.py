@@ -5,21 +5,24 @@ from db import DB
 
 from pretty_print import pretty_print
 from indexer import CodeIndexer
+import shutil
+import os
 
 
 def main():
     parser = argparse.ArgumentParser(description="Proste CLI z opcjami i oraz f")
 
-    parser.add_argument('-i', '--info', action='store_true', help='Wyświetla informacje')
-    parser.add_argument('-f', '--file', action='store_true', help='Przyjmuje nazwę pliku')
-    parser.add_argument('-u', '--update', action='store_true', help='Uaktualnie bazy danych')
+    parser.add_argument('-i', '--index', action='store_true', help='Builds local database')
+    parser.add_argument('-f', '--file', action='store_true', help='Finds in your code')
+    parser.add_argument('-u', '--update', action='store_true', help='Updates smart database')
+    parser.add_argument('-d', '--delete', action='store_true', help='Deletes local database')
 
     args = parser.parse_args()
 
-    if args.info:
+    if args.index:
         print("Creating database, could take some time...")
         indexer = CodeIndexer()
-        indexer.index_project("")
+        indexer.index_project("./code")
 
     if args.file:
         db = DB("codebase")
@@ -41,7 +44,13 @@ def main():
         for c in changes:
             print(f"[{c['status']}] {c['path']}")
 
-    if not (args.info or args.file):
+    if args.delete:
+        path = "./chroma_db"
+
+        if os.path.exists(path):
+            shutil.rmtree(path)
+
+    if not (args.index or args.file):
         parser.print_help()
 
 
