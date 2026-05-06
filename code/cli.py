@@ -22,7 +22,7 @@ def main():
     if args.index:
         print("Creating database, could take some time...")
         indexer = CodeIndexer()
-        indexer.index_project("./code")
+        indexer.index_project("")
 
     if args.file:
         db = DB("codebase")

@@ -3,7 +3,7 @@ import os
 import pathspec
 from indexer import CodeIndexer
 
-def drumbson():
+def glupia_funkcja():
     drumba = 0
     print(drumba)
 
