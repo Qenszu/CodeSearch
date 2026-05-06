@@ -1,5 +1,3 @@
-from db import DB
-
 def pretty_print(result):
     documents = result.get("documents", [[]])[0]
     metadatas = result.get("metadatas", [[]])[0]
@@ -20,21 +18,3 @@ def pretty_print(result):
         print("\n Code:")
         print(doc)
         print("\n---------------------------------------------\n")
-
-
-def main():
-    db = DB("codebase")
-    print("Write your question or 'exit' to close \n")
-
-    while True:
-        query = input("Question (type exit to close): ")
-
-        if query.lower() == "exit":
-            break
-
-        result = db.query([query], 3)
-        pretty_print(result)
-
-
-if __name__ == "__main__":
-    main()
