@@ -6,6 +6,7 @@ from indexer import CodeIndexer
 def glupia_funkcja():
     drumba = 0
     print(drumba)
+    print("ALALALALLALALA")
 
 def get_gitignore_spec():
     if os.path.exists('.gitignore'):
@@ -14,6 +15,12 @@ def get_gitignore_spec():
         return pathspec.PathSpec.from_lines('gitwildmatch', lines)
     return None
 
+
+def debug_check(indexer, search_path):
+    all_data = indexer.db.collection.get()
+    unique_files = set(m['file'] for m in all_data['metadatas'] if 'file' in m)
+    print(f"DEBUG: Szukany plik: '{search_path}'")
+    print(f"DEBUG: Pliki w bazie: {unique_files}")
 
 def smart_update(commit_a, commit_b):
     try:
@@ -44,16 +51,23 @@ def smart_update(commit_a, commit_b):
                     print(f"Dodaję do indeksu: {path}")
                     indexer.index_file(path)
                 case 'M':
-                    print(f"Aktualizuję w indeksie: {path}")
-                    indexer.db.collection.delete(where={"path": path})
+                    # Sprawdźmy ile faktycznie jest chunków dla tego pliku przed usunięciem
+                    existing = indexer.db.collection.get(where={"file": path})
+                    print(f"DEBUG: Znaleziono {len(existing['ids'])} chunków dla {path}")
+
+                    if existing['ids']:
+                        # Usuwamy używając listy wszystkich ID, które należą do tego pliku
+                        indexer.db.collection.delete(ids=existing['ids'])
+                        print(f"DEBUG: Usunięto {len(existing['ids'])} rekordów.")
 
                     indexer.index_file(path)
+
                 case 'D':
                     print(f"Usuwam z indeksu: {path}")
                     indexer.delete_file(path)
                 case 'R':
                     print(f"Zmiana nazwy: {old_path} -> {path}")
-                    indexer.delete_file(old_path)
+                    indexer.db.collection.delete(where={"file": path})
                     indexer.index_file(path)
 
             files.append({'status': status, 'path': path})
