@@ -67,7 +67,7 @@ def smart_update(commit_a, commit_b):
                     indexer.delete_file(path)
                 case 'R':
                     print(f"Zmiana nazwy: {old_path} -> {path}")
-                    indexer.db.collection.delete(where={"file": path})
+                    indexer.db.collection.delete(where={"file": old_path})
                     indexer.index_file(path)
 
             files.append({'status': status, 'path': path})
