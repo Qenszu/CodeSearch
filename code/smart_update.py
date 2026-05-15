@@ -3,10 +3,14 @@ import os
 import pathspec
 from indexer import CodeIndexer
 
-def glupia_funkcja():
-    drumba = 0
-    print(drumba)
-    print("ALALALALLALALA")
+def integral():
+    fx = lambda x: x**2
+
+    v = 0
+    for i in range(0, 1):
+        v += fx(i)
+
+    return v
 
 def get_gitignore_spec():
     if os.path.exists('.gitignore'):
