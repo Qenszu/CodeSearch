@@ -1,7 +1,13 @@
 import subprocess
 import os
-import pathspec
+
+try:
+    import pathspec
+except ImportError:
+    pathspec = None
+
 from indexer import CodeIndexer
+
 
 def integral():
     fx = lambda x: x**2
@@ -13,6 +19,9 @@ def integral():
     return v
 
 def get_gitignore_spec():
+    if pathspec is None:
+        return None
+
     if os.path.exists('.gitignore'):
         with open('.gitignore', 'r') as f:
             lines = f.readlines()
@@ -26,7 +35,7 @@ def debug_check(indexer, search_path):
     print(f"DEBUG: Szukany plik: '{search_path}'")
     print(f"DEBUG: Pliki w bazie: {unique_files}")
 
-def smart_update(commit_a, commit_b):
+def smart_update(commit_a=None, commit_b=None):
     try:
         repo_root = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
         os.chdir(repo_root)
@@ -34,8 +43,15 @@ def smart_update(commit_a, commit_b):
         indexer = CodeIndexer()
         spec = get_gitignore_spec()
 
-        cmd = ['git', 'diff', '--name-status', commit_a, commit_b]
-        result = subprocess.check_output(cmd).decode('utf-8')
+        if commit_a is not None and commit_b is not None:
+            cmd = ['git', 'diff', '--name-status', commit_a, commit_b]
+            result = subprocess.check_output(cmd).decode('utf-8')
+        else:
+            result = subprocess.check_output(['git', 'diff', '--name-status', 'HEAD']).decode('utf-8')
+            untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard']).decode('utf-8')
+            if untracked.strip():
+                untracked_files = [line.strip() for line in untracked.splitlines() if line.strip()]
+                result += '\n' + '\n'.join(f"A\t{path}" for path in untracked_files)
 
         files = []
         for line in result.strip().split('\n'):
@@ -46,6 +62,10 @@ def smart_update(commit_a, commit_b):
             path = parts[2] if status.startswith('R') else parts[1]
             old_path = parts[1] if status.startswith('R') else None
 
+            if not path.endswith('.py'):
+                print(f"Ignoruję nie-Pythonowy plik: {path}")
+                continue
+
             if spec and spec.match_file(path):
                 print(f"Ignoruję (gitignore): {path}")
                 continue
@@ -54,16 +74,9 @@ def smart_update(commit_a, commit_b):
                 case 'A':
                     print(f"Dodaję do indeksu: {path}")
                     indexer.index_file(path)
+
                 case 'M':
-                    # Sprawdźmy ile faktycznie jest chunków dla tego pliku przed usunięciem
-                    existing = indexer.db.collection.get(where={"file": path})
-                    print(f"DEBUG: Znaleziono {len(existing['ids'])} chunków dla {path}")
-
-                    if existing['ids']:
-                        # Usuwamy używając listy wszystkich ID, które należą do tego pliku
-                        indexer.db.collection.delete(ids=existing['ids'])
-                        print(f"DEBUG: Usunięto {len(existing['ids'])} rekordów.")
-
+                    indexer.db.collection.delete(where={"file": path})
                     indexer.index_file(path)
 
                 case 'D':

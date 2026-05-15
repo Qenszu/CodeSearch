@@ -26,7 +26,7 @@ class CodeIndexer:
 
         if docs:
             print(f"INDEXING: {file_path} -> {len(docs)} chunks")
-            self.db.update(docs, ids, metadatas)
+            self.db.upsert(docs, ids, metadatas)
 
         print(f"[OK] Zindeksowano: {file_path}")
 
@@ -43,7 +43,8 @@ class CodeIndexer:
             self.index_file(str(file))
 
     def delete_file(self, path):
-        pass
+        self.db.collection.delete(where={"file": path})
+        print(f"[OK] Usunięto z indeksu: {path}")
 
 
 if __name__ == "__main__":

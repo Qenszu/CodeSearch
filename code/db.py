@@ -18,6 +18,19 @@ class DB:
             ids=id_list,
             metadatas=metadatas
         )
+
+    def upsert(
+            self,
+            docs: list[str],
+            ids: list[str],
+            metadatas=None
+    ) -> None:
+        self.collection.upsert(
+            documents=docs,
+            ids=ids,
+            metadatas=metadatas
+        )
+
     def query(self, text, num_of_result) -> dict[str, Any]:
         return self.collection.query(
             query_texts=text,

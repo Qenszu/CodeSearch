@@ -8,6 +8,9 @@ from indexer import CodeIndexer
 import shutil
 import os
 
+def integral():
+    print("I am integral function")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Proste CLI z opcjami i oraz f")
@@ -38,7 +41,7 @@ def main():
             pretty_print(result)
 
     if args.update:
-        changes = smart_update('HEAD~1', 'HEAD')
+        changes = smart_update()
 
         print("-" * 30)
         for c in changes:
@@ -50,7 +53,7 @@ def main():
         if os.path.exists(path):
             shutil.rmtree(path)
 
-    if not (args.index or args.file):
+    if not (args.index or args.file or args.update or args.delete):
         parser.print_help()
 
 
