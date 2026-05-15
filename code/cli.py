@@ -8,7 +8,7 @@ from indexer import CodeIndexer
 import shutil
 import os
 
-def integral():
+def integralen():
     print("I am integral function")
 
 
@@ -18,6 +18,8 @@ def main():
     parser.add_argument('-i', '--index', action='store_true', help='Builds local database')
     parser.add_argument('-f', '--file', action='store_true', help='Finds in your code')
     parser.add_argument('-u', '--update', action='store_true', help='Updates smart database')
+    parser.add_argument('--from-commit', dest='from_commit', help='First commit for update diff')
+    parser.add_argument('--to-commit', dest='to_commit', help='Second commit for update diff')
     parser.add_argument('-d', '--delete', action='store_true', help='Deletes local database')
 
     args = parser.parse_args()
@@ -41,7 +43,7 @@ def main():
             pretty_print(result)
 
     if args.update:
-        changes = smart_update()
+        changes = smart_update(args.from_commit, args.to_commit)
 
         print("-" * 30)
         for c in changes:
