@@ -8,19 +8,6 @@ except ImportError:
 
 from indexer import CodeIndexer
 
-
-def integral():
-    fx = lambda x: x**2
-
-    v = 0
-    for i in range(0, 1):
-        v += fx(i)
-
-    return v
-
-
-
-
 def get_gitignore_spec():
     if pathspec is None:
         return None
@@ -79,7 +66,7 @@ def smart_update(commit_a=None, commit_b=None):
                     indexer.index_file(path)
 
                 case 'M':
-                    indexer.db.collection.delete(where={"file": path})
+                    indexer.delete_file(path)
                     indexer.index_file(path)
 
                 case 'D':
@@ -87,7 +74,7 @@ def smart_update(commit_a=None, commit_b=None):
                     indexer.delete_file(path)
                 case 'R':
                     print(f"Zmiana nazwy: {old_path} -> {path}")
-                    indexer.db.collection.delete(where={"file": old_path})
+                    indexer.delete_file(old_path)
                     indexer.index_file(path)
 
             files.append({'status': status, 'path': path})

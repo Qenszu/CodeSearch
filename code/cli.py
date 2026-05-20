@@ -8,10 +8,6 @@ from indexer import CodeIndexer
 import shutil
 import os
 
-def integralen():
-    print("I am integral function")
-
-
 def main():
     parser = argparse.ArgumentParser(description="Proste CLI z opcjami i oraz f")
 
